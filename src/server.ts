@@ -1,16 +1,18 @@
-import express, { Request, Response } from 'express';
-// import dotenv from 'dotenv';
+import express from 'express';
 import { AppDataSource } from './database/dbConnect';
-// dotenv.config();
+import dotenv from 'dotenv';
+import userRoute from './modules/users/routes';
+dotenv.config();
 
 const startServer = async () => {
     const app = express();
-    const PORT = process.env.PORT || 8800;
+    const PORT = Number(process.env.SERVER_PORT);
 
     app.use(express.json()); 
     
-    console.log('hello world');
-
+    //Users routes
+    app.use('/api/users', userRoute);
+    
     AppDataSource.initialize()
     .then(() => {
         console.log("Connected database successful");

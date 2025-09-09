@@ -5,8 +5,8 @@ export class village {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: "varchar", length: 120, unique: true })
-    district_id!: string;
+    @Column()
+    district_id!: number;
 
     @Column({ type: "varchar", length: 120, unique: true })
     name!: string;

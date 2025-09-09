@@ -5,8 +5,8 @@ export class district {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: "varchar", length: 120, unique: true })
-    province_id!: string;
+    @Column()
+    province_id!: number;
 
     @Column({ type: "varchar", length: 120, unique: true })
     name!: string;

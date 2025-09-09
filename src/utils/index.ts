@@ -12,7 +12,7 @@ export const handleSuccessOneResponse = (
     };
 };
 
-export const handleSuccessManyresponse = (
+export const handleSuccessManyResponse = (
     { code, message, total, data }:{ code: string, message: string, total: number, data: object }
 ): IManyResponse => {
     return {
