@@ -1,15 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn  } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn  } from "typeorm";
+import { District } from "../districts/district.entity";
 
 @Entity()
-export class village {
+export class Village {
     @PrimaryGeneratedColumn()
     id!: number;
 
     @Column()
-    district_id!: number;
+    districtId!: number;
+
+    @ManyToOne(() => District, (district) => district.villages)
+    @JoinColumn({ name: "districtId" })
+    districtData!: District;
 
     @Column({ type: "varchar", length: 120, unique: true })
-    name!: string;
+    villageName!: string;
+
+    @Column({ type: "varchar", length: 120, unique: true })
+    villageCode!: number;
 
     @CreateDateColumn()
     created_at!: Date;

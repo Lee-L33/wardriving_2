@@ -19,9 +19,9 @@ userRoute.post("/create", async (req: Request, res: Response) => {
     };
 });
 
-userRoute.get("/get-one/:id", async (req: Request, res: Response) => {
+userRoute.get("/get-one/:user_id", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.id);
+        const id = Number(req.params.user_id);
         const result = await QueryServices.getOne(id);
         res.status(200).json(result);
     } catch (error: any) {
@@ -33,9 +33,9 @@ userRoute.get("/get-one/:id", async (req: Request, res: Response) => {
     };
 });
 
-userRoute.put("/update/:id", async (req: Request, res: Response) => {
+userRoute.put("/update/:user_id", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.id);
+        const id = Number(req.params.user_id);
         const data = req.body;
         const result = await MutationServices.updateUser(id, data);
         res.status(200).json(result);
@@ -61,9 +61,9 @@ userRoute.get("/get-many", async (req: Request, res: Response) => {
     };
 });
 
-userRoute.delete("/delete/:id", async (req: Request, res: Response) => {
+userRoute.delete("/delete/:user_id", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.id);
+        const id = Number(req.params.user_id);
         const result = await MutationServices.deleteUser(id);
         res.status(200).json(result);
     } catch (error: any) {
@@ -75,4 +75,31 @@ userRoute.delete("/delete/:id", async (req: Request, res: Response) => {
     };
 });
 
+userRoute.post("/register", async (req: Request, res: Response) => {
+    try {
+        const data = req.body;
+        const result = await MutationServices.userRegister(data);
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(500).json(handleErrorOneResponse({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+            error: {},
+        }));
+    };
+});
+
+userRoute.post("/login", async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        const result = await MutationServices.userLogin( email, password );
+        res.status(200).json(result);
+    } catch (error: any) {
+        res.status(500).json(handleErrorOneResponse({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+            error
+        }));
+    };
+});
 export default userRoute;

@@ -7,21 +7,23 @@ import { User } from "../user.entity";
 export class QueryServices {
     static userRepository = AppDataSource.getRepository(User);
 
-    static async getOne(id:  number): Promise<IOneResponse> {
+    static async getOne(id: number): Promise<IOneResponse> {
         try {
+            //Read id from params
+            const user_id = id;
             //check id
-            if (!id) {
+            if (!user_id) {
                 return handleErrorOneResponse({
                     code: "BAD_REQUEST",
-                    message: "Missing Id",
+                    message: "Missing user_id",
                     error: {},
                 });
             };
             //Get user from id
-            const user = await this.userRepository.findOne({ where: {id}});
+            const user = await this.userRepository.findOneBy({ id: user_id });
             if (!user) {
                 return handleErrorOneResponse({
-                    code: "BAD_REQUEST",
+                    code: "NOT_FOUND",
                     message: "User not found",
                     error: {},
                 });
@@ -33,10 +35,18 @@ export class QueryServices {
                 data: {...user, password: null},
             });
         } catch (error: any) {
+            if (error instanceof Error) {
+                console.error("getOne Error: ", error.stack);
+                return handleErrorOneResponse({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: error.message,
+                    error: {},
+                });
+            };
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
-                error,
+                message: "Unknown error",
+                error: {},
             });
         };
     };
@@ -57,10 +67,18 @@ export class QueryServices {
                 })
             });
         } catch (error: any) {
+            if (error instanceof Error) {
+                console.error("getmany Error: ", error.stack);
+                return handleErrorOneResponse({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: error.message,
+                    error: {},
+                });
+            };
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
-                error,
+                message: "Unknown error",
+                error: {},
             });
         };
     };
