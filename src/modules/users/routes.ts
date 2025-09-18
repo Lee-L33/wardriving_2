@@ -14,11 +14,11 @@ userRoute.post("/create", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorOneResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error,
+            error: {},
         }));
     };
 });
-
+ 
 userRoute.get("/get-one/:user_id", async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.user_id);
@@ -28,7 +28,7 @@ userRoute.get("/get-one/:user_id", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorOneResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error,
+            error: {},
         }));
     };
 });
@@ -43,7 +43,7 @@ userRoute.put("/update/:user_id", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorOneResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error,
+            error: {},
         }));
     };
 });
@@ -56,7 +56,7 @@ userRoute.get("/get-many", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorManyResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error,
+            error: {},
         }));
     };
 });
@@ -70,7 +70,7 @@ userRoute.delete("/delete/:user_id", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorOneResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error,
+            error: {},
         }));
     };
 });
@@ -98,7 +98,7 @@ userRoute.post("/login", async (req: Request, res: Response) => {
         res.status(500).json(handleErrorOneResponse({
             code: "INTERNAL_SERVER_ERROR",
             message: error.message,
-            error
+            error: {},
         }));
     };
 });

@@ -6,7 +6,7 @@ export class User {
     id!: number;
 
     @Column()
-    fullname!: string;
+    username!: string;
 
     @Column({ type: "varchar", length: 120, unique: true })
     email!: string;

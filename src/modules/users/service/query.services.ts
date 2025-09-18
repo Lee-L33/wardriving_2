@@ -1,6 +1,6 @@
 import { AppDataSource } from "../../../database/dbConnect";
-import { IOneResponse } from "../../../types/base";
-import { handleErrorOneResponse, handleSuccessManyResponse, handleSuccessOneResponse } from "../../../utils";
+import { IManyResponse, IOneResponse } from "../../../types/base";
+import { handleErrorManyResponse, handleErrorOneResponse, handleSuccessManyResponse, handleSuccessOneResponse } from "../../../utils";
 import { User } from "../user.entity";
 
 
@@ -51,7 +51,7 @@ export class QueryServices {
         };
     };
 
-    static async getMany(): Promise<IOneResponse> {
+    static async getMany(): Promise<IManyResponse> {
         try {
             //Count total users
             const totalUsers = await this.userRepository.count({});
@@ -60,22 +60,22 @@ export class QueryServices {
             const users = await this.userRepository.find({});
             return handleSuccessManyResponse({
                 code: "SUCCESS",
-                message: "Get users all success",
+                message: "Get all users success",
                 total: totalUsers,
                 data: users.map((user) => {
                     return {...user, password: null};
-                })
+                }),
             });
         } catch (error: any) {
             if (error instanceof Error) {
                 console.error("getmany Error: ", error.stack);
-                return handleErrorOneResponse({
+                return handleErrorManyResponse({
                     code: "INTERNAL_SERVER_ERROR",
                     message: error.message,
                     error: {},
                 });
             };
-            return handleErrorOneResponse({
+            return handleErrorManyResponse({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "Unknown error",
                 error: {},

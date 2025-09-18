@@ -11,10 +11,10 @@ export class MutationServices {
     static async createUser(data: User): Promise<IOneResponse> {
         try {
             //validate data
-            if (!data.fullname){
+            if (!data.username){
                 return handleErrorOneResponse({
                     code: "DATA_REQUIRED",
-                    message: "Fullname must required",
+                    message: "Username must required",
                     error: {},
                 });
             };
@@ -58,7 +58,7 @@ export class MutationServices {
             const createUser = await this.userRepository.save(data);
 
             return handleSuccessOneResponse({
-                code: "USER_CREATED",
+                code: "SUCCESS",
                 message: "Create user success",
                 data: {createUser},
             });
@@ -68,7 +68,7 @@ export class MutationServices {
                 return handleErrorOneResponse({
                     code: "INTERNAL_SERVER_ERROR",
                     message: error.message,
-                    error,
+                    error: {},
                 });
             };
             return handleErrorOneResponse({
@@ -105,7 +105,7 @@ export class MutationServices {
             //Check email exist
             if (data.email) {
                 const existEmail = await this.userRepository.findOneBy({ email: data.email}); 
-                if(existEmail && existEmail.id !== user_id) { 
+                if(existEmail) { 
                     return handleErrorOneResponse({ 
                         code: "EMAIL_ALREADY_EXIST", 
                         message: "This email is already exist", 
@@ -201,10 +201,10 @@ export class MutationServices {
     static async userRegister(data: User): Promise<IOneResponse> {
         try {
             //validate data
-            if (!data.fullname){
+            if (!data.username){
                 return handleErrorOneResponse({
                     code: "DATA_REQUIRED",
-                    message: "Fullname must required",
+                    message: "Username must required",
                     error: {},
                 });
             };
@@ -303,7 +303,7 @@ export class MutationServices {
             //4. Generate token(key)
             const payload = {
                 id: emailExist.id,
-                fullname: emailExist.fullname,
+                fullname: emailExist.username,
             };
 
             const token = jwt.sign( payload, process.env.JWT_SECRET || "jwt_secret", { expiresIn: "1d" });

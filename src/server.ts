@@ -2,6 +2,7 @@ import express from 'express';
 import { AppDataSource } from './database/dbConnect';
 import dotenv from 'dotenv';
 import userRoute from './modules/users/routes';
+import provinceRoute from './modules/provinces/routes';
 dotenv.config();
 
 const startServer = async () => {
@@ -12,6 +13,7 @@ const startServer = async () => {
     
     //Users routes
     app.use('/api/users', userRoute);
+    app.use('/api/provinces', provinceRoute);
     
     AppDataSource.initialize()
     .then(() => {

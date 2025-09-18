@@ -14,11 +14,11 @@ export class District {
     @JoinColumn({ name: "provinceId" })
     provinceData!: Province;
 
-    @Column({ type: "varchar", length: 120, unique: true })
-    districtName!: string;
+    @Column({ type: "int", unsigned: true })
+    districtCode!: number;
 
     @Column({ type: "varchar", length: 120, unique: true })
-    districtCode!: number;
+    districtName!: string;
 
     @CreateDateColumn()
     created_at!: Date;
