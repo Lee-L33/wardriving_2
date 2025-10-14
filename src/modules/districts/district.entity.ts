@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany  } from "typeorm";
 import { Province } from "../provinces/province.entity";
 import { Village } from "../villages/village.entity";
+import { Attapue } from "../attapue/attapue.entity";
 
 @Entity()
 export class District {

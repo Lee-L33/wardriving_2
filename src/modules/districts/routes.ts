@@ -1,15 +1,16 @@
 import express, { Request, Response } from "express";
-import { MutationServices } from "./service/mutation.services";
 import { handleErrorManyResponse, handleErrorOneResponse } from "../../utils";
-import { QueryServices } from "./service/query.services";
+import { MutationServices } from "./service/mutation.service";
+import { QueryServices } from "./service/query.service";
 
 
-const provinceRoute = express();
+const districtRoute
+ = express();
 
-provinceRoute.post("/create", async (req: Request, res: Response) => {
+districtRoute.post("/create", async (req: Request, res: Response) => {
     try {
         const data = req.body;
-        const result = await MutationServices.createProvince(data);
+        const result = await MutationServices.createDistrict(data);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json(handleErrorOneResponse({
@@ -20,9 +21,9 @@ provinceRoute.post("/create", async (req: Request, res: Response) => {
     };
 });
 
-provinceRoute.get("/get-one/:provinceId", async (req: Request, res: Response) => {
+districtRoute.get("/get-one/:districtId", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.provinceId);
+        const id = Number(req.params.districtId);
         const result = await QueryServices.getOne(id);
         res.status(200).json(result);
     } catch (error: any) {
@@ -34,11 +35,12 @@ provinceRoute.get("/get-one/:provinceId", async (req: Request, res: Response) =>
     };
 });
 
-provinceRoute.put("/update/:provinceId", async (req: Request, res: Response) => {
+districtRoute.put("/update/:districtId", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.provinceId);
+        const id = Number(req.params.districtId);
+        const provinceId = Number(req.params.provinceId);
         const data = req.body;
-        const result = await MutationServices.updateProvince(id, data);
+        const result = await MutationServices.updateDistrict(id, provinceId, data);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json(handleErrorOneResponse({
@@ -49,7 +51,7 @@ provinceRoute.put("/update/:provinceId", async (req: Request, res: Response) => 
     };
 });
 
-provinceRoute.get("/get-all", async (req: Request, res: Response) => {
+districtRoute.get("/get-all", async (req: Request, res: Response) => {
     try {
         const result = await QueryServices.getAll();
         res.status(200).json(result);
@@ -62,10 +64,11 @@ provinceRoute.get("/get-all", async (req: Request, res: Response) => {
     };
 });
 
-provinceRoute.delete("/delete/:provinceId", async (req: Request, res: Response) => {
+districtRoute.delete("/delete/:districtId", async (req: Request, res: Response) => {
     try {
-        const id = Number(req.params.provinceId);
-        const result = await MutationServices.deleteProvince(id);
+        const id = Number(req.params.districtId);
+        const provinceId = Number(req.params.provinceId);
+        const result = await MutationServices.deleteDistrict(id, provinceId);
         res.status(200).json(result);
     } catch (error: any) {
         res.status(500).json(handleErrorOneResponse({
@@ -76,4 +79,4 @@ provinceRoute.delete("/delete/:provinceId", async (req: Request, res: Response) 
     };
 });
 
-export default provinceRoute;
+export default districtRoute;

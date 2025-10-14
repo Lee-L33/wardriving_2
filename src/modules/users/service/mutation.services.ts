@@ -289,7 +289,7 @@ export class MutationServices {
                     error: {},
                 });
             };
-
+ 
             //3. Compare password
             const comparePassword = await argon2.verify( emailExist.password, password );
             if (!comparePassword) {

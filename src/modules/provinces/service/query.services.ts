@@ -5,24 +5,24 @@ import { Province } from "../province.entity";
 import logger from "../../../middlewares/logger";
 
 export class QueryServices {
-    static userRepository = AppDataSource.getRepository(Province);
+    static provinceRepository = AppDataSource.getRepository(Province);
 
     static async getOne(id: number): Promise<IOneResponse> {
         try {
             //Read id from params
-            const province_id = id;
+            const provinceId = id;
 
             //Check id
-            if (!province_id) {
+            if (!provinceId) {
                 return handleErrorOneResponse({
                     code: "BAD_REQUEST",
-                    message: "Missing province_id",
+                    message: "Missing provinceId",
                     error: {},
                 });
             };
 
             //Get province from id
-            const province = await this.userRepository.findOneBy({ id: province_id });
+            const province = await this.provinceRepository.findOneBy({ id: provinceId });
             if (!province) {
                 return handleErrorOneResponse({
                     code: "NOT_FOUND",
@@ -53,10 +53,10 @@ export class QueryServices {
     static async getAll(): Promise<IManyResponse> {
         try {
             //Count allprovinces
-            const totalProvinces = await this.userRepository.count({});
+            const totalProvinces = await this.provinceRepository.count({});
 
             //Get provinces data and return to client
-            const provinces = await this.userRepository.find({});
+            const provinces = await this.provinceRepository.find({});
             return handleSuccessManyResponse({
                 code: "SUCCESS",
                 message: "Get all provinces success",

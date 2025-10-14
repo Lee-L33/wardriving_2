@@ -5,7 +5,7 @@ import { Province } from "../province.entity";
 import logger from "../../../middlewares/logger";
 
 export class MutationServices {
-    static userRepository = AppDataSource.getRepository(Province);
+    static provinceRepository = AppDataSource.getRepository(Province);
 
     static async createProvince(data: Province): Promise<IOneResponse> {
         try {
@@ -26,7 +26,7 @@ export class MutationServices {
             };
 
             //Exist code
-            const codeExist = await this.userRepository.findOneBy({ provinceCode: data.provinceCode});
+            const codeExist = await this.provinceRepository.findOneBy({ provinceCode: data.provinceCode});
             if (codeExist) {
                 return handleErrorOneResponse({
                     code: "CODE_ALREADY_EXIST",
@@ -36,7 +36,7 @@ export class MutationServices {
             };
 
             //Exist name
-            const nameExist = await this.userRepository.findOneBy({ provinceName: data.provinceName});
+            const nameExist = await this.provinceRepository.findOneBy({ provinceName: data.provinceName});
             if (nameExist) {
                 return handleErrorOneResponse({
                     code: "CODE_ALREADY_EXIST",
@@ -46,7 +46,7 @@ export class MutationServices {
             };
 
             //Create province
-            const createProvince = await this.userRepository.save(data);
+            const createProvince = await this.provinceRepository.save(data);
 
             //Return to client
             return handleSuccessOneResponse({
@@ -70,19 +70,19 @@ export class MutationServices {
     static async updateProvince(id: number, data: Province): Promise<IOneResponse> {
         try {
             //Read id from params
-            const province_id = id;
+            const provinceId = id;
 
             //Check id
-            if (!province_id) {
+            if (!provinceId) {
                 return handleErrorOneResponse({
                     code: "BAD_REQUEST",
-                    message: "Missing province_id",
+                    message: "Missing provinceId",
                     error: {},
                 });
             };
 
             //Check province
-            const province = await this.userRepository.findOneBy({ id: province_id });
+            const province = await this.provinceRepository.findOneBy({ id: provinceId });
             if (!province) {
                 return handleErrorOneResponse({
                     code: "NOT_FOUND",
@@ -92,7 +92,7 @@ export class MutationServices {
             };
 
             //Exist code
-            const codeExist = await this.userRepository.findOneBy({ provinceCode: data.provinceCode });
+            const codeExist = await this.provinceRepository.findOneBy({ provinceCode: data.provinceCode });
             if (codeExist) {
                 return handleErrorOneResponse({
                     code: "ALREADY_EXIST",
@@ -102,7 +102,7 @@ export class MutationServices {
             };
 
             //Exist name
-            const nameExist = await this.userRepository.findOneBy({ provinceName: data.provinceName });
+            const nameExist = await this.provinceRepository.findOneBy({ provinceName: data.provinceName });
             if (nameExist) {
                 return handleErrorOneResponse({
                     code: "ALREADY_EXIST",
@@ -112,8 +112,8 @@ export class MutationServices {
             };
 
             //Update data
-            this.userRepository.merge(province, data);
-            const updateProvince = await this.userRepository.save(province);
+            this.provinceRepository.merge(province, data);
+            const updateProvince = await this.provinceRepository.save(province);
 
             //return to client
             return handleSuccessOneResponse({
@@ -137,17 +137,17 @@ export class MutationServices {
     static async deleteProvince(id: number): Promise<IOneResponse> {
         try {
             //Read id from params
-            const province_id = id;
-            if (!province_id) {
+            const provinceId = id;
+            if (!provinceId) {
                 return handleErrorOneResponse({
                     code: "BAD_REQUEST",
-                    message: "Missing province_id",
+                    message: "Missing provinceId",
                     error: {},
                 });
             };
 
             //Check province
-            const province = await this.userRepository.findOneBy({ id: province_id });
+            const province = await this.provinceRepository.findOneBy({ id: provinceId });
 
             if (!province) {
                 return handleErrorOneResponse({
@@ -158,7 +158,7 @@ export class MutationServices {
             };
 
             //Delete province and return to client
-            await this.userRepository.delete(province_id);
+            await this.provinceRepository.delete(provinceId);
             return handleSuccessOneResponse({
                 code: "SUCCESS",
                 message: "Delete province success",

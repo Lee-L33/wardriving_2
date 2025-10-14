@@ -41,7 +41,7 @@ export const authenticatetoken = ( req: Request, res: Response, next: NextFuncti
     };
 };
 
-export const decodeUserDataFromToken = (req: Request, Res: Response) => {
+export const decodeUserDataFromToken = (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization;
         if (!token) {
@@ -62,5 +62,5 @@ export const decodeUserDataFromToken = (req: Request, Res: Response) => {
             message: error.message,
             error,
         });
-    };
+    }; 
 };
