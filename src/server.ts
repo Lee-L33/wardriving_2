@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRoute from './modules/users/routes';
 import provinceRoute from './modules/provinces/routes';
 import districtRoute from './modules/districts/routes';
+import attapueRoute from './modules/attapue/routes';
 dotenv.config();
 
 const startServer = async () => {
@@ -12,11 +13,14 @@ const startServer = async () => {
 
     app.use(express.json()); 
     
-    //Users routes
+    //routes
     app.use('/api/users', userRoute);
     app.use('/api/provinces', provinceRoute);
     app.use('/api/districts', districtRoute);
+
+    app.use('/api/attapue', attapueRoute);
     
+    //database and server
     AppDataSource.initialize()
     .then(() => {
         console.log("Connected database successful");

@@ -11,7 +11,6 @@ export class MutationServices {
     static async createDistrict(data: District): Promise<IOneResponse> {
         try { 
             //Validate data
-            
             if (!data.districtCode) {
                 return handleErrorOneResponse({
                     code: "DATA_REQUIRED",

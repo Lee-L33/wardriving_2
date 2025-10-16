@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany  } from "typeorm";
 import { Province } from "../provinces/province.entity";
 import { Village } from "../villages/village.entity";
-import { Attapue } from "../attapue/attapue.entity";
+import { Attapue_network } from "../attapue/attapue.entity";
 
 @Entity()
 export class District {
@@ -29,4 +29,7 @@ export class District {
 
     @OneToMany(() => Village, (village) => village.districtData)
     villages!: Village[];
+
+    @OneToMany(() => Attapue_network, (attapue_network) => attapue_network.districtData)
+    attapue_networks!: Attapue_network[];
 };

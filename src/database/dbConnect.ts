@@ -5,6 +5,7 @@ import { User } from '../modules/users/user.entity';
 import { Province } from '../modules/provinces/province.entity';
 import { District } from '../modules/districts/district.entity';
 import { Village } from '../modules/villages/village.entity';
+import { Attapue_network } from '../modules/attapue/attapue.entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -16,5 +17,7 @@ export const AppDataSource = new DataSource({
     database: process.env.MYSQL_NAME,
     synchronize: true, //use false in production
     logging: false,
-    entities: [User, Province, District, Village],
+    entities: [
+        User, Province, District, Village, Attapue_network
+    ],
 });

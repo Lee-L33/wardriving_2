@@ -4,8 +4,7 @@ import { MutationServices } from "./service/mutation.service";
 import { QueryServices } from "./service/query.service";
 
 
-const districtRoute
- = express();
+const districtRoute = express();
 
 districtRoute.post("/create", async (req: Request, res: Response) => {
     try {
