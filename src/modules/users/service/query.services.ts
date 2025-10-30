@@ -1,4 +1,5 @@
 import { AppDataSource } from "../../../database/dbConnect";
+import logger from "../../../middlewares/logger";
 import { IManyResponse, IOneResponse } from "../../../types/base";
 import { handleErrorManyResponse, handleErrorOneResponse, handleSuccessManyResponse, handleSuccessOneResponse } from "../../../utils";
 import { User } from "../user.entity";
@@ -35,17 +36,13 @@ export class QueryServices {
                 data: {...user, password: null},
             });
         } catch (error: any) {
-            if (error instanceof Error) {
-                console.error("getOne Error: ", error.stack);
-                return handleErrorOneResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+            logger.error ({
+                msg: "getOne error",
+                err: error instanceof Error ? error: new Error(String(error)),
+            });
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
@@ -66,18 +63,14 @@ export class QueryServices {
                     return {...user, password: null};
                 }),
             });
-        } catch (error: any) {
-            if (error instanceof Error) {
-                console.error("getmany Error: ", error.stack);
-                return handleErrorManyResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+        } catch (error: unknown) {
+            logger.error ({
+                msg: "getMany error",
+                err: error instanceof Error ? error: new Error(String(error)),
+            });
             return handleErrorManyResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
