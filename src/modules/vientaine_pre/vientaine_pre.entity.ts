@@ -2,14 +2,14 @@ import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, Primary
 import { District } from "../districts/district.entity";
 
 @Entity()
-export class Attapue_network {
+export class Vientaine_pre_network {
     @PrimaryGeneratedColumn()
     network_id!: number;
 
     @Column()
     district_id!: number;
 
-    @ManyToOne(() => District, (district) => district.attapue_networks)
+    @ManyToOne(() => District, (district) => district.vientaine_pre_networks)
     @JoinColumn({ name: "district_id" })
     districtData!: District;
 

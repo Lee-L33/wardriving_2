@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { Province } from "../provinces/province.entity";
 import { Village } from "../villages/village.entity";
 import { Attapue_network } from "../attapue/attapue.entity";
+import { Vientaine_pre_network } from "../vientaine_pre/vientaine_pre.entity";
 
 @Entity()
 export class District {
@@ -32,4 +33,7 @@ export class District {
 
     @OneToMany(() => Attapue_network, (attapue_network) => attapue_network.districtData)
     attapue_networks!: Attapue_network[];
+
+    @OneToMany(() => Vientaine_pre_network, (vientaine_pre_network) => vientaine_pre_network.districtData)
+    vientaine_pre_networks!: Attapue_network[];
 };

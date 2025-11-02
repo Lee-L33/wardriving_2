@@ -6,6 +6,7 @@ import { Province } from '../modules/provinces/province.entity';
 import { District } from '../modules/districts/district.entity';
 import { Village } from '../modules/villages/village.entity';
 import { Attapue_network } from '../modules/attapue/attapue.entity';
+import { Vientaine_pre_network } from '../modules/vientaine_pre/vientaine_pre.entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -18,6 +19,6 @@ export const AppDataSource = new DataSource({
     synchronize: true, //use false in production
     logging: false,
     entities: [
-        User, Province, District, Village, Attapue_network
+        User, Province, District, Village, Attapue_network, Vientaine_pre_network
     ],
 });
