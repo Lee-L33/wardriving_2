@@ -6,7 +6,7 @@ import { Vientaine_pre_network } from "../vientaine_pre.entity";
 
 
 export class MutationServices {
-    static attapue_networkRepository = AppDataSource.getRepository(Vientaine_pre_network);
+    static vientaine_networkRepository = AppDataSource.getRepository(Vientaine_pre_network);
 
     static async createNetwork(data: Vientaine_pre_network): Promise<IOneResponse> {
         try {
@@ -82,10 +82,10 @@ export class MutationServices {
                 });
             };
 
-            const createNetwork = await this.attapue_networkRepository.save(data);
+            const createNetwork = await this.vientaine_networkRepository.save(data);
 
             return handleSuccessOneResponse({
-                code: "SUCCESS", message: "Create attapue_network sucsess", data: {createNetwork},
+                code: "SUCCESS", message: "Create attapue_network success", data: {createNetwork},
             });
         } catch (error: unknown) {
             logger.error ({
