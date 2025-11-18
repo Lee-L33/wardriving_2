@@ -2,6 +2,7 @@ import express from 'express';
 import path, { parse } from 'path';
 import fs from 'fs';
 import multer from 'multer';
+import { Pool } from 'mysql2/typings/mysql/lib/Pool';
 
 const router = express.Router();
 
@@ -41,62 +42,62 @@ router.post("/csv", upload.single("file"), async (req, res) => {
     //stream parse
     const stream = fs.createReadStream(filePath);
 
-    // const csvStream = parse({ headers: true, ignoreEmpty: true, trim: true })
-    //     .validate((row: any, cb) => {
-    //         //validate headers and fields
-    //         const { ok, reason } = validateRow(row);
-    //         if (!ok) {
-    //             invalidCount++;
-    //             errors.push(`Row ${rowCount + 1}: ${reason}`);
-    //         }
-    //         cb(null, ok);
-    //     })
-    //     .on("error", err => {
-    //         console.error("CSV parse error:", err);
-    //         cleanup();
-    //         return res.status(400).json({ error: "CSV parse error", details: err.message });
-    //     })
-    //     .on("data", (row: any) => {
-    //         rowCount++;
-    //         //transform row if needed
-    //         results.push(row);
-    //     })
-    //     .on("end", async (rowCountParsed: number) => {
-    //         //insert into DB 
-    //         const conn = await pool.getConnection();
-    //         try {
-    //             await conn.beginTransaction();
+    const csvStream = parse({ headers: true, ignoreEmpty: true, trim: true })
+        .validate((row: any, cb: any) => {
+            //validate headers and fields
+            const { ok, reason } = validateRow(row);
+            if (!ok) {
+                invalidCount++;
+                errors.push(`Row ${rowCount + 1}: ${reason}`);
+            }
+            cb(null, ok);
+        })
+        .on("error", err => {
+            console.error("CSV parse error:", err);
+            cleanup();
+            return res.status(400).json({ error: "CSV parse error", details: err.message });
+        })
+        .on("data", (row: any) => {
+            rowCount++;
+            //transform row if needed
+            results.push(row);
+        })
+        .on("end", async (rowCountParsed: number) => {
+            //insert into DB 
+            const conn = await Pool.getConnection();
+            try {
+                await conn.beginTransaction();
 
-    //             if (results.length > 0) {
-    //                 const placeholders = results.map(() => "(?,?,?)").join(",");
-    //                 const values: any[] = [];
-    //                 for (const r of results) {
-    //                     values.push(r.name, r.email, Number(r.age || null));
-    //                 }
-    //                 //use parameterized query
-    //                 const sql = `INSERT INTO users (name, email, age) VALUES ${placeholders}`;
-    //                 await conn.query(sql, values);
-    //             }
+                if (results.length > 0) {
+                    const placeholders = results.map(() => "(?,?,?)").join(",");
+                    const values: any[] = [];
+                    for (const r of results) {
+                        values.push(r.name, r.email, Number(r.age || null));
+                    }
+                    //use parameterized query
+                    const sql = `INSERT INTO users (name, email, age) VALUES ${placeholders}`;
+                    await conn.query(sql, values);
+                }
 
-    //             await conn.commit();
-    //             cleanup();
-    //             return res.json({
-    //                 ok: true,
-    //                 inserted: results.length,
-    //                 invalid: invalidCount,
-    //                 errors: errors.slice(0, 10) //cap errors returned
-    //             });
-    //         } catch (err) {
-    //             await conn.rollback();
-    //             console.error("DB insert error:", err);
-    //             cleanup();
-    //             return res.status(500).json({ error: "DB error", details: (err as Error).message });
-    //         } finally {
-    //             conn.release();
-    //         }
-    //     });
+                await conn.commit();
+                cleanup();
+                return res.json({
+                    ok: true,
+                    inserted: results.length,
+                    invalid: invalidCount,
+                    errors: errors.slice(0, 10) //cap errors returned
+                });
+            } catch (err) {
+                await conn.rollback();
+                console.error("DB insert error:", err);
+                cleanup();
+                return res.status(500).json({ error: "DB error", details: (err as Error).message });
+            } finally {
+                conn.release();
+            }
+        });
 
-    // stream.pipe(csvStream);
+    stream.pipe(csvStream);
 
     function cleanup() {
         //delete temp file
