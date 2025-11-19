@@ -1,8 +1,12 @@
 import express from 'express';
-import path, { parse } from 'path';
+import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
-import { Pool } from 'mysql2/typings/mysql/lib/Pool';
+import { parse } from 'fast-csv';
+import { AppDataSource } from '../database/dbConnect';
+import { validateRow } from './validator';
+import { District } from '../modules/districts/district.entity';
+import { User } from '../modules/users/user.entity';
 
 const router = express.Router();
 
@@ -43,7 +47,7 @@ router.post("/csv", upload.single("file"), async (req, res) => {
     const stream = fs.createReadStream(filePath);
 
     const csvStream = parse({ headers: true, ignoreEmpty: true, trim: true })
-        .validate((row: any, cb: any) => {
+        .validate((row: any, cb) => {
             //validate headers and fields
             const { ok, reason } = validateRow(row);
             if (!ok) {
@@ -63,39 +67,51 @@ router.post("/csv", upload.single("file"), async (req, res) => {
             results.push(row);
         })
         .on("end", async (rowCountParsed: number) => {
-            //insert into DB 
-            const conn = await Pool.getConnection();
+            const queryRunner = AppDataSource.createQueryRunner();
+
             try {
-                await conn.beginTransaction();
+                await queryRunner.connect();
+                await queryRunner.startTransaction();
 
                 if (results.length > 0) {
-                    const placeholders = results.map(() => "(?,?,?)").join(",");
-                    const values: any[] = [];
-                    for (const r of results) {
-                        values.push(r.name, r.email, Number(r.age || null));
-                    }
-                    //use parameterized query
-                    const sql = `INSERT INTO users (name, email, age) VALUES ${placeholders}`;
-                    await conn.query(sql, values);
+                    // เตรียมข้อมูลในรูปแบบ entity
+                    const entities = results.map((r) => {
+                        return queryRunner.manager.create(User, {
+                            username: r.username,
+                            email: r.email,
+                            password: r.password,
+                        });
+                    });
+
+                    // insert แบบ bulk ที่เร็วกว่า save()
+                    await queryRunner.manager.insert(User, entities);
                 }
 
-                await conn.commit();
+                await queryRunner.commitTransaction();
+
                 cleanup();
                 return res.json({
                     ok: true,
                     inserted: results.length,
                     invalid: invalidCount,
-                    errors: errors.slice(0, 10) //cap errors returned
+                    errors: errors.slice(0, 10)
                 });
+
             } catch (err) {
-                await conn.rollback();
+                await queryRunner.rollbackTransaction();
                 console.error("DB insert error:", err);
                 cleanup();
-                return res.status(500).json({ error: "DB error", details: (err as Error).message });
+
+                return res.status(500).json({
+                    error: "DB error",
+                    details: (err as Error).message
+                });
+
             } finally {
-                conn.release();
+                await queryRunner.release();
             }
         });
+
 
     stream.pipe(csvStream);
 
