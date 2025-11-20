@@ -22,11 +22,6 @@ export function validateRow(row: Record<string, any>): { ok: boolean; reason?: s
         if (pwd.length < 6 || pwd.length > 250) {
             return { ok: false, reason: "Password must be 6-250 characters" };
         }
-
-        // ป้องกันช่องว่างทั้งสตริง
-        if (/^\s+$/.test(pwd)) {
-            return { ok: false, reason: "Password cannot be only spaces" };
-        }
     }
 
     //name length

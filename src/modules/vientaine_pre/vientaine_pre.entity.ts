@@ -3,6 +3,9 @@ import { District } from "../districts/district.entity";
 
 @Entity()
 export class Vientaine_pre_network {
+    static createQueryBuilder(arg0: string) {
+        throw new Error('Method not implemented.');
+    }
     @PrimaryGeneratedColumn()
     network_id!: number;
 
