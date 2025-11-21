@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/wifis.geojson", async (req: Request, res: Response) => {
     try {
-        const wifi = AppDataSource.getRepository(Vientaine_pre_network);
+        const wifiRepository = AppDataSource.getRepository(Vientaine_pre_network);
         const { minLon, minLat, maxLon, maxLat, limit = 1000 } = req.query as any;
 
         let qb = Vientaine_pre_network
