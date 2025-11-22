@@ -7,7 +7,7 @@ import { AppDataSource } from '../database/dbConnect';
 import { validateRow } from './validator';
 import { User } from '../modules/users/user.entity';
 
-const router = express.Router();
+const uploadRoute = express();
 
 const UPLOAD_DIR = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -33,7 +33,7 @@ const upload = multer({
 });
 
 //POST /api/upload/csv
-router.post("/csv", upload.single("file"), async (req, res) => {
+uploadRoute.post("/csv", upload.single("file"), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
     const filePath = req.file.path;
@@ -122,4 +122,4 @@ router.post("/csv", upload.single("file"), async (req, res) => {
     }
 });
 
-export default router;
+export default uploadRoute;
