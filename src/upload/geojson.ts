@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import { AppDataSource } from "../database/dbConnect";
 import { Vientaine_pre_network } from "../modules/vientaine_pre/vientaine_pre.entity";
 
-const router = express.Router();
+const wifiRoute = express();
 
-router.get("/wifis.geojson", async (req: Request, res: Response) => {
+wifiRoute.get("/wifis.geojson", async (req: Request, res: Response) => {
     try {
         const wifiRepository = AppDataSource.getRepository(Vientaine_pre_network);
 
@@ -77,4 +77,4 @@ router.get("/wifis.geojson", async (req: Request, res: Response) => {
     }
 });
 
-export default router;
+export default wifiRoute;

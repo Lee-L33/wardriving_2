@@ -5,6 +5,7 @@ import userRoute from './modules/users/routes';
 import provinceRoute from './modules/provinces/routes';
 import districtRoute from './modules/districts/routes';
 import attapueRoute from './modules/attapue/routes';
+import wifiRoute from './upload/geojson';
 dotenv.config();
 
 const startServer = async () => {
@@ -19,6 +20,8 @@ const startServer = async () => {
     app.use('/api/districts', districtRoute);
 
     app.use('/api/attapue', attapueRoute);
+
+    app.use('/api/wifis.geojson', wifiRoute);
     
     //database and server
     AppDataSource.initialize()
