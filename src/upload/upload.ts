@@ -5,7 +5,6 @@ import multer from 'multer';
 import { parse } from 'fast-csv';
 import { AppDataSource } from '../database/dbConnect';
 import { validateRow } from './validator';
-import { District } from '../modules/districts/district.entity';
 import { User } from '../modules/users/user.entity';
 
 const router = express.Router();
