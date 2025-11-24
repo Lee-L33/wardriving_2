@@ -4,8 +4,6 @@ import { IManyResponse, IOneResponse } from "../../../types/base";
 import { handleErrorManyResponse, handleErrorOneResponse, handleSuccessManyResponse, handleSuccessOneResponse } from "../../../utils";
 import { Vientaine_pre_network } from "../vientaine_pre.entity";
 
-
-
 export class QueryServices {
     static vientaine_pre_networkRepository = AppDataSource.getRepository(Vientaine_pre_network);
 
