@@ -2,10 +2,10 @@ import { AppDataSource } from "../../../database/dbConnect";
 import logger from "../../../middlewares/logger";
 import { IManyResponse, IOneResponse } from "../../../types/base";
 import { handleErrorManyResponse, handleErrorOneResponse, handleSuccessManyResponse, handleSuccessOneResponse } from "../../../utils";
-import { Vientaine_pre_network } from "../vientaine_pre.entity";
+import { Attapue_network } from "../attapue.entity";
 
 export class QueryServices {
-    static vientaine_preRepository = AppDataSource.getRepository(Vientaine_pre_network);
+    static attapueRepository = AppDataSource.getRepository(Attapue_network);
 
     static async get_network(district_id: number): Promise<IOneResponse> {
         try {
@@ -22,7 +22,7 @@ export class QueryServices {
             }
             
             //Get network from district_id
-            const network = await this.vientaine_preRepository.findOneBy({ district_id: id});
+            const network = await this.attapueRepository.findOneBy({ district_id: id});
             if (!network) {
                 return handleErrorOneResponse ({
                     code: "NOT FOUND",
@@ -53,10 +53,10 @@ export class QueryServices {
     static async getAll_network(): Promise<IManyResponse> {
         try {
             //Count total networks
-            const totalNetworks = await this.vientaine_preRepository.count({});
+            const totalNetworks = await this.attapueRepository.count({});
 
             //Get networks data
-            const netwoks = await this.vientaine_preRepository.find({});
+            const netwoks = await this.attapueRepository.find({});
 
             return handleSuccessManyResponse ({
                  code: "SUCCESS",
