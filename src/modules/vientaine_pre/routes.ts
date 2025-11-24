@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import { handleErrorOneResponse } from "../../utils";
 import { MutationServices } from "./services/mutation.services";
 
-const vientaineRoutes = express();
+const vientaine_preRoutes = express();
 
-vientaineRoutes.post("/create", async (req: Request, res: Response) => {
+vientaine_preRoutes.post("/create", async (req: Request, res: Response) => {
     try { 
         const data = req.body;
         const result = await MutationServices.createNetwork(data);
@@ -18,4 +18,16 @@ vientaineRoutes.post("/create", async (req: Request, res: Response) => {
     };
 });
 
-export default vientaineRoutes;
+vientaine_preRoutes.get("/get-one/:id", async (req: Request, res: Response) => {
+    try {
+        
+    } catch (error: any) {
+        res.status(500).json(handleErrorOneResponse({
+            code: "INTERNAL SERVER ERROR",
+            message: error.message,
+            error: {},
+        }));
+    };
+});
+
+export default vientaine_preRoutes;

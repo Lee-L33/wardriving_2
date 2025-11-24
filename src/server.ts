@@ -6,6 +6,7 @@ import provinceRoute from './modules/provinces/routes';
 import districtRoute from './modules/districts/routes';
 import attapueRoute from './modules/attapue/routes';
 import wifiRoute from './upload/geojson';
+import vientaine_preRoutes from './modules/vientaine_pre/routes';
 dotenv.config();
 
 const startServer = async () => {
@@ -20,6 +21,7 @@ const startServer = async () => {
     app.use('/api/districts', districtRoute);
 
     app.use('/api/attapue', attapueRoute);
+    app.use('/api/vientaine_pre', vientaine_preRoutes)
 
     app.use('/api/wifis.geojson', wifiRoute);
     
