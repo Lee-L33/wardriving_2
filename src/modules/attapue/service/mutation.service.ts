@@ -6,7 +6,7 @@ import { Attapue_network } from "../attapue.entity";
 
 
 export class MutationServices {
-    static attapue_networkRepository = AppDataSource.getRepository(Attapue_network);
+    static attapueRepository = AppDataSource.getRepository(Attapue_network);
 
     static async createNetwork(data: Attapue_network): Promise<IOneResponse> {
         try {
@@ -82,7 +82,7 @@ export class MutationServices {
                 });
             };
 
-            const createNetwork = await this.attapue_networkRepository.save(data);
+            const createNetwork = await this.attapueRepository.save(data);
 
             return handleSuccessOneResponse({
                 code: "SUCCESS", message: "Create attapue_network sucsess", data: {createNetwork},
