@@ -10,78 +10,54 @@ export class MutationServices {
 
     static async createNetwork(data: Attapue_network): Promise<IOneResponse> {
         try {
+            //Validate distrcit id
             const district_id = Number;
             if (!district_id) {
                 return handleErrorOneResponse({
-                    code: "NOT_FOUND", message: "District not found", error: {},
+                    code: "NOT_FOUND", 
+                    message: "District not found", 
+                    error: {},
                 });
             };
-            if (!data.ssid) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Ssid must required", error: {},
-                });
+            
+            //Required fileds
+            const requiredFields: (keyof Attapue_network)[] = [
+                "ssid",
+                "bssid",
+                "manufacturer", 
+                "signal_strength",
+                "authentication",
+                "encryption",
+                "radio_type",
+                "channel",
+                "latitude",
+                "longitude",
+                "scan_timestamp",
+                "network_identifier",
+                "frequency"
+            ];
+
+            for (const field of requiredFields) {
+                if (data[field] === undefined || data[field] === null || data[field] === "") {
+                    return handleErrorOneResponse({
+                        code: "DATA_REQUIRED",
+                        message: `${field} is required`,
+                        error: {},
+                    });
+                };
             };
-            if (!data.bssid) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Bssid must required", error: {},
-                });
-            };
-            if (!data.manufacturer) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "manufaacturer must required", error: {},
-                });
-            };
-            if (!data.signal_strength) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Signal_strength must required", error: {},
-                });
-            };
-            if (!data.authentication) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Authentication must required", error: {},
-                });
-            };
-            if (!data.encryption) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Encryption must required", error: {},
-                });
-            };
-            if (!data.radio_type) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Radio_type must required", error: {},
-                });
-            };
-            if (!data.channel) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Channel must required", error: {},
-                });
-            };
-            if (!data.latitude) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Latitude must required", error: {},
-                });
-            };
-            if (!data.longitude) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Longtitude must required", error: {},
-                });
-            };
-            if (!data.scan_timestamp) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Scan_timestamp must required", error: {},
-                });
-            };
-            if (!data.network_identifier) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Network_indetifier must required", error: {},
-                });
-            };
-            if (!data.frequency) {
-                return handleErrorOneResponse({ 
-                    code: "DATA_REQUIRED", message: "Frequency must required", error: {},
+
+            //Prevent duplicate BSSID
+            const existing = await this.attapueRepository.findOneBy({ bssid: data.bssid});
+            if (existing) {
+                return handleErrorOneResponse({
+                    code: "DUPLICATE",
+                    message: "This bssid already exists",
+                    error: {},
                 });
             };
 
+            //save the network
             const createNetwork = await this.attapueRepository.save(data);
 
             return handleSuccessOneResponse({

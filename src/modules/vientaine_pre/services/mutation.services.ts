@@ -46,9 +46,7 @@ export class MutationServices {
             }
 
             // Prevent duplicate BSSID
-            const existing = await this.vientaine_preRepository.findOne({
-                where: { bssid: data.bssid }
-            });
+            const existing = await this.vientaine_preRepository.findOneBy({ bssid: data.bssid });
 
             if (existing) {
                 return handleErrorOneResponse({
