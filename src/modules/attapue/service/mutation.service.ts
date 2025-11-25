@@ -4,27 +4,26 @@ import { IOneResponse } from "../../../types/base";
 import { handleErrorOneResponse, handleSuccessOneResponse } from "../../../utils";
 import { Attapue_network } from "../attapue.entity";
 
-
 export class MutationServices {
     static attapueRepository = AppDataSource.getRepository(Attapue_network);
 
     static async createNetwork(data: Attapue_network): Promise<IOneResponse> {
         try {
-            //Validate distrcit id
-            const district_id = Number;
+            // Validate district_id
+            const district_id = Number(data.district_id);
             if (!district_id) {
                 return handleErrorOneResponse({
-                    code: "NOT_FOUND", 
-                    message: "District not found", 
+                    code: "NOT_FOUND",
+                    message: "District not found",
                     error: {},
                 });
-            };
-            
-            //Required fileds
+            }
+
+            // Validate Required Fields
             const requiredFields: (keyof Attapue_network)[] = [
                 "ssid",
                 "bssid",
-                "manufacturer", 
+                "manufacturer",
                 "signal_strength",
                 "authentication",
                 "encryption",
@@ -38,41 +37,52 @@ export class MutationServices {
             ];
 
             for (const field of requiredFields) {
-                if (data[field] === undefined || data[field] === null || data[field] === "") {
+                const value = data[field];
+
+                if (value === undefined || value === null || (typeof value === "string" && value.trim() === "")) {
                     return handleErrorOneResponse({
                         code: "DATA_REQUIRED",
                         message: `${field} is required`,
                         error: {},
                     });
-                };
-            };
+                }
+            }
 
-            //Prevent duplicate BSSID
-            const existing = await this.attapueRepository.findOneBy({ bssid: data.bssid});
+            // Prevent Duplicate BSSID
+            // Lowercase normalize to ensure consistency
+            const normalizedBssid = data.bssid.toLowerCase();
+            const existing = await this.attapueRepository.findOneBy({ bssid: normalizedBssid });
+
             if (existing) {
                 return handleErrorOneResponse({
                     code: "DUPLICATE",
-                    message: "This bssid already exists",
+                    message: "This BSSID already exists",
                     error: {},
                 });
-            };
+            }
 
-            //save the network
-            const createNetwork = await this.attapueRepository.save(data);
+            data.bssid = normalizedBssid;
+
+            // Save Network
+            const network = await this.attapueRepository.save(data);
 
             return handleSuccessOneResponse({
-                code: "SUCCESS", message: "Create attapue_network sucsess", data: {createNetwork},
+                code: "SUCCESS",
+                message: "Create attapue_network success",
+                data: { network }
             });
+
         } catch (error: unknown) {
-            logger.error ({
+            logger.error({
                 msg: "createNetwork error",
                 error: error instanceof Error ? error : new Error(String(error)),
             });
-            return handleErrorOneResponse ({
+
+            return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An unexpected error occurres.",
+                message: "An unexpected error occurs.",
                 error: {},
             });
-        };
-    };
-};
+        }
+    }
+}
