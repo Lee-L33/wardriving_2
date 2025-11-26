@@ -82,7 +82,11 @@ export class MutationServices {
     static async updateNetwork(id: number, data: Vientaine_pre_network): Promise<IOneResponse> {
         try {
             
-            
+            return handleSuccessOneResponse({
+                code: "SUCCESS", 
+                message: "Update network success",
+                data: {},
+            })
         } catch (error: unknown) {
             logger.error({
                 msg: "update network error",
