@@ -78,4 +78,22 @@ export class MutationServices {
             });
         };
     };
+
+    static async updateNetwork(id: number, data: Vientaine_pre_network): Promise<IOneResponse> {
+        try {
+            
+            
+        } catch (error: unknown) {
+            logger.error({
+                msg: "update network error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
+
+            return handleErrorOneResponse({
+                code: "INTERNAL SERVER ERROR",
+                message: "An unexpected error occurred.",
+                error: {},
+            });
+        };
+    };
 };
