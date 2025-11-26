@@ -83,6 +83,28 @@ export class MutationServices {
                 message: "An unexpected error occurs.",
                 error: {},
             });
-        }
-    }
-}
+        };
+    };
+
+    static async updateNetwork(id: number, data: Attapue_network): Promise<IOneResponse> {
+        try {
+            
+            return handleSuccessOneResponse({
+                code: "SUCCESS",
+                message: "Update network success",
+                data: {},
+            });
+        } catch (error: unknown) {
+            logger.error({
+                msg: "update network error",
+                error: error instanceof Error ? error: new Error(String(error)),
+            });
+
+            return handleErrorOneResponse({
+                code: "INTERNAL SERVER ERROR",
+                message: "An unexpected error occurred.",
+                error: {},
+            });
+        };
+    };
+};
