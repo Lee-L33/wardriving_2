@@ -107,4 +107,26 @@ export class MutationServices {
             });
         };
     };
+
+    static async deleteNetwork(id: number): Promise<IOneResponse> {
+        try {
+
+            return handleSuccessOneResponse({
+                code: "SUCCESS",
+                message: "Delete network success",
+                data: {},
+            });
+        } catch (error: unknown) {
+            logger.error({
+                msg: "delete network error",
+                error: error instanceof Error ? error: new Error(String(error)),
+            });
+
+            return handleErrorOneResponse({
+                code: "INTERNAL SERVER ERROR",
+                message: "an unexpected error accurred.",
+                error: {},
+            });
+        };
+    };
 };
