@@ -86,7 +86,7 @@ export class MutationServices {
         };
     };
 
-    static async updateNetwork(id: number, data: Attapue_network): Promise<IOneResponse> {
+    static async updateNetwork(district_id: number, data: Attapue_network): Promise<IOneResponse> {
         try {
 
             return handleSuccessOneResponse({
