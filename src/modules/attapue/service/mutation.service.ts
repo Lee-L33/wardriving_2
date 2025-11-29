@@ -88,7 +88,7 @@ export class MutationServices {
 
     static async updateNetwork(id: number, data: Attapue_network): Promise<IOneResponse> {
         try {
-            
+
             return handleSuccessOneResponse({
                 code: "SUCCESS",
                 message: "Update network success",
@@ -97,7 +97,7 @@ export class MutationServices {
         } catch (error: unknown) {
             logger.error({
                 msg: "update network error",
-                error: error instanceof Error ? error: new Error(String(error)),
+                error: error instanceof Error ? error : new Error(String(error)),
             });
 
             return handleErrorOneResponse({
@@ -108,8 +108,27 @@ export class MutationServices {
         };
     };
 
-    static async deleteNetwork(id: number): Promise<IOneResponse> {
+    static async deleteNetwork(district_id: number): Promise<IOneResponse> {
         try {
+            const id = district_id;
+            if (!id) {
+                return handleErrorOneResponse({
+                    code: "BAD REQUEST",
+                    message: "Missing district_id",
+                    error: {},
+                });
+            };
+
+            const network = await this.attapueRepository.findOneBy({ district_id: id });
+            if (!network) {
+                return handleErrorOneResponse({
+                    code: "NOT FOUND",
+                    message: "This network not found",
+                    error: {},
+                });
+            };
+
+            await this.attapueRepository.delete({ district_id });
 
             return handleSuccessOneResponse({
                 code: "SUCCESS",
@@ -119,7 +138,7 @@ export class MutationServices {
         } catch (error: unknown) {
             logger.error({
                 msg: "delete network error",
-                error: error instanceof Error ? error: new Error(String(error)),
+                error: error instanceof Error ? error : new Error(String(error)),
             });
 
             return handleErrorOneResponse({

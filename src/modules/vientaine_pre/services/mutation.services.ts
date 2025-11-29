@@ -79,11 +79,11 @@ export class MutationServices {
         };
     };
 
-    static async updateNetwork(id: number, data: Vientaine_pre_network): Promise<IOneResponse> {
+    static async updateNetwork(district_id: number, data: Vientaine_pre_network): Promise<IOneResponse> {
         try {
-            
+
             return handleSuccessOneResponse({
-                code: "SUCCESS", 
+                code: "SUCCESS",
                 message: "Update network success",
                 data: {},
             })
@@ -101,8 +101,27 @@ export class MutationServices {
         };
     };
 
-    static async deleteNetwork(id: number): Promise<IOneResponse> {
+    static async deleteNetwork(district_id: number): Promise<IOneResponse> {
         try {
+            const id = district_id;
+            if (!id) {
+                return handleErrorOneResponse({
+                    code: "BAD REQUEST",
+                    message: "Missing district_id",
+                    error: {},
+                });
+            };
+
+            const network = await this.vientaine_preRepository.findOneBy({ district_id: id });
+            if (!network) {
+                return handleErrorOneResponse({
+                    code: "NOT FOUND",
+                    message: "This network not found",
+                    error: {},
+                });
+            };
+
+            await this.vientaine_preRepository.delete({ district_id });
 
             return handleSuccessOneResponse({
                 code: "SUCCESS",
@@ -112,7 +131,7 @@ export class MutationServices {
         } catch (error: unknown) {
             logger.error({
                 msg: "delete network error",
-                error: error instanceof Error ? error: new Error(String(error)),
+                error: error instanceof Error ? error : new Error(String(error)),
             });
 
             return handleErrorOneResponse({
