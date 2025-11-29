@@ -88,6 +88,14 @@ export class MutationServices {
 
     static async updateNetwork(district_id: number, data: Attapue_network): Promise<IOneResponse> {
         try {
+            const id = district_id;
+            if (!id) {
+                return handleErrorOneResponse({
+                    code: "BAD REQUEST",
+                    message: "Missing district_id",
+                    error: {},
+                });
+            };
 
             return handleSuccessOneResponse({
                 code: "SUCCESS",
