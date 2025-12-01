@@ -149,4 +149,13 @@ export class MutationServices {
             });
         };
     };
+
+    static async deleteAllNetworks(): Promise<IOneResponse> {
+
+        return handleSuccessOneResponse({
+            code: "SUCCESS",
+            message: "Delete all networks success",
+            data: {},
+        });
+    }
 };
