@@ -151,11 +151,24 @@ export class MutationServices {
     };
 
     static async deleteAllNetworks(): Promise<IOneResponse> {
+        try {
 
-        return handleSuccessOneResponse({
-            code: "SUCCESS",
-            message: "Delete all networks success",
-            data: {},
-        });
-    }
+            const network = await this.vientaine_preRepository.delete({});
+            return handleSuccessOneResponse({
+                code: "SUCCESS",
+                message: "Delete all networks success",
+                data: {network},
+            });
+        } catch (error: unknown) {
+            logger.error({
+                msg: "delete al network error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
+            return handleErrorOneResponse({
+                code: "INTERNAL SERVER ERROR",
+                message: "An unexpected error occurred.",
+                error: {},
+            });
+        };
+    };
 };
