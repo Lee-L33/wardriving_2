@@ -152,7 +152,6 @@ export class MutationServices {
 
     static async deleteAllNetworks(): Promise<IOneResponse> {
         try {
-
             const network = await this.vientaine_preRepository.delete({});
             return handleSuccessOneResponse({
                 code: "SUCCESS",
