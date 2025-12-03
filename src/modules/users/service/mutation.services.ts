@@ -179,17 +179,13 @@ export class MutationServices {
                 data: {},
             });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error("deleteUser Error: ", error.stack);
-                return handleErrorOneResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+            logger.error({
+                msg: "delete user error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
