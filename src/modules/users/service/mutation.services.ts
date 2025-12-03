@@ -246,17 +246,13 @@ export class MutationServices {
                 data: {...userRegister, password: null},
             });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error("userRegister Error: ", error.stack);
-                return handleErrorOneResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+            logger.error({
+                msg: "register user error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
@@ -311,17 +307,13 @@ export class MutationServices {
                 message: "Login success",
             });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error("userLogin Error: ", error.stack);
-                return handleErrorOneResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+            logger.error({
+                msg: "login user error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
