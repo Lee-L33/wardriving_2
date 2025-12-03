@@ -4,6 +4,7 @@ import argon2 from "argon2";
 import { AppDataSource } from "../../../database/dbConnect";
 import { IOneResponse } from "../../../types/base";
 import jwt from "jsonwebtoken";
+import logger from "../../../middlewares/logger";
 
 export class MutationServices {
     static userRepository = AppDataSource.getRepository(User);
@@ -133,17 +134,13 @@ export class MutationServices {
                 data: { ...updateUser, password: null },
             });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error("updateUser Error: ", error.stack);
-                return handleErrorOneResponse({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error.message,
-                    error: {},
-                });
-            };
+            logger.error({
+                msg: "update user error",
+                error: error instanceof Error ? error : new Error(String(error)),
+            });
             return handleErrorOneResponse({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unknown error",
+                message: "An unexpected error occurred.",
                 error: {},
             });
         };
