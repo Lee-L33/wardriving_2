@@ -2,11 +2,12 @@ import express, { Request, Response } from "express";
 import { MutationServices } from "./service/mutation.services";
 import { handleErrorManyResponse, handleErrorOneResponse } from "../../utils";
 import { QueryServices } from "./service/query.services";
+import { authenticatetoken } from "../../middlewares";
 
 
 const provinceRoute = express();
 
-provinceRoute.post("/create", async (req: Request, res: Response) => {
+provinceRoute.post("/create", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const data = req.body;
         const result = await MutationServices.createProvince(data);
@@ -20,7 +21,7 @@ provinceRoute.post("/create", async (req: Request, res: Response) => {
     };
 });
 
-provinceRoute.get("/get-one/:provinceId", async (req: Request, res: Response) => {
+provinceRoute.get("/get-one/:provinceId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.provinceId);
         const result = await QueryServices.getOne(id);
@@ -34,7 +35,7 @@ provinceRoute.get("/get-one/:provinceId", async (req: Request, res: Response) =>
     };
 });
 
-provinceRoute.put("/update/:provinceId", async (req: Request, res: Response) => {
+provinceRoute.put("/update/:provinceId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.provinceId);
         const data = req.body;
@@ -49,7 +50,7 @@ provinceRoute.put("/update/:provinceId", async (req: Request, res: Response) => 
     };
 });
 
-provinceRoute.get("/get-all", async (req: Request, res: Response) => {
+provinceRoute.get("/get-all", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const result = await QueryServices.getAll();
         res.status(200).json(result);
@@ -62,7 +63,7 @@ provinceRoute.get("/get-all", async (req: Request, res: Response) => {
     };
 });
 
-provinceRoute.delete("/delete/:provinceId", async (req: Request, res: Response) => {
+provinceRoute.delete("/delete/:provinceId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.provinceId);
         const result = await MutationServices.deleteProvince(id);
