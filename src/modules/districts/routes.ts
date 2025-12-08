@@ -2,11 +2,12 @@ import express, { Request, Response } from "express";
 import { handleErrorManyResponse, handleErrorOneResponse } from "../../utils";
 import { MutationServices } from "./service/mutation.service";
 import { QueryServices } from "./service/query.service";
+import { authenticatetoken } from "../../middlewares";
 
 
 const districtRoute = express();
 
-districtRoute.post("/create", async (req: Request, res: Response) => {
+districtRoute.post("/create", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const data = req.body;
         const result = await MutationServices.createDistrict(data);
@@ -20,7 +21,7 @@ districtRoute.post("/create", async (req: Request, res: Response) => {
     };
 });
 
-districtRoute.get("/get-one/:districtId", async (req: Request, res: Response) => {
+districtRoute.get("/get-one/:districtId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.districtId);
         const result = await QueryServices.getOne(id);
@@ -34,7 +35,7 @@ districtRoute.get("/get-one/:districtId", async (req: Request, res: Response) =>
     };
 });
 
-districtRoute.put("/update/:districtId", async (req: Request, res: Response) => {
+districtRoute.put("/update/:districtId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.districtId);
         const provinceId = Number(req.params.provinceId);
@@ -50,7 +51,7 @@ districtRoute.put("/update/:districtId", async (req: Request, res: Response) => 
     };
 });
 
-districtRoute.get("/get-all", async (req: Request, res: Response) => {
+districtRoute.get("/get-all", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const result = await QueryServices.getAll();
         res.status(200).json(result);
@@ -63,7 +64,7 @@ districtRoute.get("/get-all", async (req: Request, res: Response) => {
     };
 });
 
-districtRoute.delete("/delete/:districtId", async (req: Request, res: Response) => {
+districtRoute.delete("/delete/:districtId", authenticatetoken, async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.districtId);
         const provinceId = Number(req.params.provinceId);
