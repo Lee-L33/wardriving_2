@@ -1,23 +1,25 @@
 import express, { Request, Response } from "express";
 import { AppDataSource } from "../database/dbConnect";
-import { Vientaine_pre_network } from "../modules/vientaine_pre/vientaine_pre.entity";
+import { Chanthabuly_network } from "../modules/chanthabuly/chanthabuly.entity";
 
-const wifiRoute = express();
+const chanthabulyGeoJsonRoute = express();
 
-wifiRoute.get("/wifis.geojson", async (req: Request, res: Response) => {
+chanthabulyGeoJsonRoute.get("/geojson", async (req: Request, res: Response) => {
     try {
-        const wifiRepository = AppDataSource.getRepository(Vientaine_pre_network);
+        const repository = AppDataSource.getRepository(Chanthabuly_network);
 
         const { minLon, minLat, maxLon, maxLat } = req.query as any;
-        const limit = Number(req.query.limit) || 1000;
+        const limit = Number(req.query.limit) || 5000;
 
-        // QueryBuilder
-        let qb = wifiRepository
+        // Build query
+        let qb = repository
             .createQueryBuilder("wifi")
             .where("wifi.latitude IS NOT NULL")
-            .andWhere("wifi.longitude IS NOT NULL");
+            .andWhere("wifi.longitude IS NOT NULL")
+            .andWhere("wifi.latitude != 0.0")
+            .andWhere("wifi.longitude != 0.0");
 
-        // ถ้ามี bounding box ให้ filter
+        // Apply bounding box filter if provided
         if (minLon && minLat && maxLon && maxLat) {
             const minLatF = parseFloat(minLat);
             const maxLatF = parseFloat(maxLat);
@@ -40,22 +42,30 @@ wifiRoute.get("/wifis.geojson", async (req: Request, res: Response) => {
             }
         }
 
-        // Limit + order
-        qb = qb.orderBy("wifi.scan_timestamp", "DESC").limit(limit);
+        // Order by signal strength (strongest first) and limit
+        qb = qb
+            .orderBy("wifi.signal_strength", "DESC")
+            .limit(limit);
 
         const rows = await qb.getMany();
 
-        // Convert to GeoJSON
+        // Convert to GeoJSON FeatureCollection
         const features = rows.map((r: any) => ({
             type: "Feature",
             properties: {
-                id: r.network_id,
+                id: r.id,
                 ssid: r.ssid,
                 bssid: r.bssid,
-                signal_strength: r.signal_strength,
-                channel: r.channel,
                 manufacturer: r.manufacturer,
-                scan_timestamp: r.scan_timestamp,
+                signal_strength: r.signal_strength,
+                authentication: r.authentication,
+                encryption: r.encryption,
+                channel: r.channel,
+                frequency: r.frequency,
+                radio_type: r.radio_type,
+                network_type: r.network_type,
+                first_seen: r.first_seen,
+                last_seen: r.last_seen,
             },
             geometry: {
                 type: "Point",
@@ -69,12 +79,20 @@ wifiRoute.get("/wifis.geojson", async (req: Request, res: Response) => {
         return res.json({
             type: "FeatureCollection",
             features,
+            metadata: {
+                count: features.length,
+                limit: limit,
+            }
         });
 
     } catch (error) {
-        console.error("Error in /wifis.geojson:", error);
-        return res.status(500).json({ ok: false, reason: "db error" });
+        console.error("Error in /chanthabuly/geojson:", error);
+        return res.status(500).json({
+            ok: false,
+            reason: "Database error",
+            details: (error as Error).message
+        });
     }
 });
 
-export default wifiRoute;
+export default chanthabulyGeoJsonRoute;

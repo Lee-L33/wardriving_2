@@ -6,15 +6,18 @@ import provinceRoute from './modules/provinces/routes';
 import districtRoute from './modules/districts/routes';
 import attapueRoute from './modules/attapue/routes';
 import wifiRoute from './upload/geojson';
+import uploadRoute from './upload/upload';
 import vientaine_preRoutes from './modules/vientaine_pre/routes';
+import chanthabulyUploadRoute from './upload/chanthabuly-upload';
+import chanthabulyGeoJsonRoute from './upload/chanthabuly-geojson';
 dotenv.config();
 
 const startServer = async () => {
     const app = express();
     const PORT = Number(process.env.SERVER_PORT);
 
-    app.use(express.json()); 
-    
+    app.use(express.json());
+
     //routes
     app.use('/api/users', userRoute);
     app.use('/api/provinces', provinceRoute);
@@ -23,24 +26,27 @@ const startServer = async () => {
     app.use('/api/attapue', attapueRoute);
     app.use('/api/vientaine_pre', vientaine_preRoutes)
 
+    app.use('/api/upload', uploadRoute);
+    app.use('/api/chanthabuly', chanthabulyUploadRoute);
+    app.use('/api/chanthabuly', chanthabulyGeoJsonRoute);
     app.use('/api/wifis.geojson', wifiRoute);
-    
+
     //database and server
     AppDataSource.initialize()
-    .then(() => {
-        console.log("Connected database successful");
+        .then(() => {
+            console.log("Connected database successful");
 
-        const server = app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
+            const server = app.listen(PORT, () => {
+                console.log(`Server is running on http://localhost:${PORT}`);
+            });
 
-        server.on('error', (err: Error) => {
-            console.log('Failed to start server:', err);
+            server.on('error', (err: Error) => {
+                console.log('Failed to start server:', err);
+            });
+        })
+        .catch((err) => {
+            console.error("Database connection failed:", err);
         });
-    })
-    .catch((err) => {
-        console.error("Database connection failed:", err);
-    });
 
 };
 
