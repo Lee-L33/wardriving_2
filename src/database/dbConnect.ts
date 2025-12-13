@@ -8,6 +8,7 @@ import { Village } from '../modules/villages/village.entity';
 import { Attapue_network } from '../modules/attapue/attapue.entity';
 import { Vientaine_pre_network } from '../modules/vientaine_pre/vientaine_pre.entity';
 import { Chanthabuly_network } from '../modules/chanthabuly/chanthabuly.entity';
+import { WifiNetwork } from '../wifi/wifi.entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -20,6 +21,6 @@ export const AppDataSource = new DataSource({
     synchronize: true, //use false in production
     logging: false,
     entities: [
-        User, Province, District, Village, Attapue_network, Vientaine_pre_network, Chanthabuly_network
+        User, Province, District, Village, Attapue_network, Vientaine_pre_network, Chanthabuly_network, WifiNetwork
     ],
 });

@@ -10,6 +10,7 @@ import uploadRoute from './upload/upload';
 import vientaine_preRoutes from './modules/vientaine_pre/routes';
 import chanthabulyUploadRoute from './upload/chanthabuly-upload';
 import chanthabulyGeoJsonRoute from './upload/chanthabuly-geojson';
+import wifiNetworkRoutes from './wifi/routes';
 dotenv.config();
 
 const startServer = async () => {
@@ -29,6 +30,7 @@ const startServer = async () => {
     app.use('/api/upload', uploadRoute);
     app.use('/api/chanthabuly', chanthabulyUploadRoute);
     app.use('/api/chanthabuly', chanthabulyGeoJsonRoute);
+    app.use('/api/wifi', wifiNetworkRoutes);
     app.use('/api/wifis.geojson', wifiRoute);
 
     //database and server
